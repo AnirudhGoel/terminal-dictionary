@@ -1,8 +1,16 @@
 import requests
 import json
+import sys
 
 count = 0
-term = raw_input("Enter the term to get it's meaning : ")
+term = ""
+query_length = len(sys.argv)
+
+if query_length > 1:
+	for x in range(1,query_length):
+		term = term + " " + sys.argv[x]
+
+term = term.strip()
 
 url = "http://api.duckduckgo.com/?q=" + term + "&format=json&pretty=1"
 
@@ -14,11 +22,11 @@ json_data = json.loads(str(data))
 count = len(json_data["RelatedTopics"])
 
 if count == 0:
-	print "No meaning found for this word."
+	print "No meaning found for this term."
 elif count == 1:
 	print json_data["RelatedTopics"][0]["Text"]
 else:
 	count = 3 if count >= 3 else count
-	print "The word %s may refer to " %term
+	print "The term %s may refer to " %term
 	for x in xrange(0,count):
 		print str(x+1) + " : " + json_data["RelatedTopics"][x]["Text"]
